@@ -1,0 +1,18 @@
+[
+    {
+        "ParameterKey":"ProductName",
+        "ParameterValue":"Prowler"
+    },
+    {
+        "ParameterKey":"ProductArn",
+        "ParameterValue":"arn:aws:securityhub:<REGION>::product/prowler/prowler"
+    },
+    {
+        "ParameterKey":"DeploymentTargets",
+        "ParameterValue":"r-nelf"
+    },
+    {
+        "ParameterKey":"DeploymentVersion",
+        "ParameterValue": "1" 
+    }
+]
