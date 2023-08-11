@@ -12,19 +12,19 @@ Parameters:
   ProductArn:
     Type: String
     Description: 'Product Arn (arn:aws:securityhub:<REGION>:Product). Use <REGION> to specify all regions'
-  DeploymentVersion:
-    Type: String
-    Default: "1"
-    Description: 'Deployment version, used to deploy new regions'
   DeploymentTargets:
     Type: CommaDelimitedList
     Description: List of OUs for deploying
+  DeploymentRegions:
+    Type: CommaDelimitedList
+    Default: "1"
+    Description: 'Comma separated list of region names (eu-west-1, eu-central-1)'
 
 Resources:
   OrganizationStackset:
     Type: AWS::CloudFormation::StackSet
     Properties:
-      StackSetName: !Sub "aws-securityhub-partner-integration-2-${ProductName}"
+      StackSetName: !Sub "aws-securityhub-partner-integration-${ProductName}"
       Description: !Sub "Setup AWS Security Hub partner integration ${ProductName}"
       StackInstancesGroup:
         - DeploymentTargets:
@@ -45,8 +45,8 @@ Resources:
       Parameters:
         - ParameterKey: ProductArn
           ParameterValue: !Ref ProductArn
-        - ParameterKey: DeploymentVersion
-          ParameterValue: !Ref DeploymentVersion
+        - ParameterKey: DeploymentRegions
+          ParameterValue: !Join [ ",", !Ref DeploymentRegions ]
       TemplateBody: |
         AWSTemplateFormatVersion: '2010-09-09'
         Description: Enable security hub partner across all regions
@@ -54,9 +54,9 @@ Resources:
           ProductArn:
             Type: String
             Description: 'Product Arn (arn:aws:securityhub:<REGION>:Product). Use <REGION> to specify all regions'
-          DeploymentVersion:
-            Type: String
-            Description: 'Deployment version, increase if needed when enabling AWS Security Hub in new regions'
+          DeploymentRegions:
+            Type: CommaDelimitedList
+            Description: 'Deployment regions names'
             Default: 1
 
         Resources:
@@ -82,12 +82,13 @@ Resources:
                   def lambda_handler(event, context):
 
                       product_arn = event['ResourceProperties']['ProductArn']
+                      regions_to_deploy = event['ResourceProperties']['DeploymentRegions']
                       product_name = product_arn.split('/',1).pop()
                       account_id = context.invoked_function_arn.split(':')[4]
 
                       logger.info(f'Enabling integration, event: {event} for {account_id}')
 
-                      for region in regions:
+                      for region in regions_to_deploy.split(","):
                         security_hub_enabled = True
                         try:
                           regional_client = session.client('securityhub',region_name=region)
@@ -163,4 +164,4 @@ Resources:
             Properties:
               ServiceToken: !GetAtt 'EnableIntegrationLambda.Arn'
               ProductArn: !Ref ProductArn
-              DeploymentVersion: !Ref DeploymentVersion
+              DeploymentRegions: !Join [ "," , !Ref DeploymentRegions ]

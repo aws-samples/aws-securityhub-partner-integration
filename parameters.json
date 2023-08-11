@@ -9,10 +9,10 @@
     },
     {
         "ParameterKey":"DeploymentTargets",
-        "ParameterValue":"r-nelf"
+        "ParameterValue":"r-abcd"
     },
     {
-        "ParameterKey":"DeploymentVersion",
-        "ParameterValue": "1" 
+        "ParameterKey":"DeploymentRegions",
+        "ParameterValue": "eu-west-1,eu-central-1" 
     }
 ]
