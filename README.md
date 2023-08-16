@@ -20,8 +20,12 @@ Stack set templates to deploy a partner integration in AWS Security Hub across a
 * `ProductName`: Name of the product being enabled.
 * `ProductArn`: Arn for the AWS Security Hub partner. You can find it under this [link](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-partner-providers.html).
 * `DeploymentTargets`: List of AWS Organization Units (OU) Ids to deploy the stack.
-* `DeploymentVersion`: Version number, increase and re-deploy when enabling AWS Security Hub in new regions.
+* `DeploymentRegions`: List of AWS regions where to deploy the partner integration.
 2. Run `./setup.sh deploy`
+
+## Updating regions and AWS Organization Units
+
+You can add and remove regions and AWS Organization Unit IDs by updating `parameter.json` and re-deploying changes. You can also update directly these values from the AWS Cloudformation console stack named `securityhub-integration-<PARTNER-NAME>`. 
 
 ## Disabling integration
 

@@ -82,13 +82,18 @@ Resources:
                   def lambda_handler(event, context):
 
                       product_arn = event['ResourceProperties']['ProductArn']
-                      regions_to_deploy = event['ResourceProperties']['DeploymentRegions']
+                      regions_to_deploy = event['ResourceProperties']['DeploymentRegions'].split(",")
                       product_name = product_arn.split('/',1).pop()
                       account_id = context.invoked_function_arn.split(':')[4]
 
                       logger.info(f'Enabling integration, event: {event} for {account_id}')
 
-                      for region in regions_to_deploy.split(","):
+                      if event['RequestType'] == 'Update':
+                        previous_regions = event['OldResourceProperties']['DeploymentRegions'].split(",")
+                        regions_to_remove = list(set(regions_to_deploy) - set(previous_regions))
+                        regions_to_add = list(set(previous_regions) - set(regions_to_deploy))
+
+                      for region in regions_to_deploy:
                         security_hub_enabled = True
                         try:
                           regional_client = session.client('securityhub',region_name=region)
@@ -100,14 +105,14 @@ Resources:
                         if security_hub_enabled:
                           try:
 
-                            if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
+                            if event['RequestType'] == 'Create' or ( event['RequestType'] == 'Update' and region in regions_to_add ):
                               region_product_arn = product_arn.replace("<REGION>", region)
 
                               response = regional_client.enable_import_findings_for_product(
                                 ProductArn=region_product_arn
                               )
 
-                            elif event['RequestType'] == 'Delete':
+                            elif event['RequestType'] == 'Delete' or ( event['RequestType'] == 'Update' and region in regions_to_remove ):
                               subscription_product_arn = f'arn:aws:securityhub:{region}:{account_id}:product-subscription/{product_name}'
 
                               response = regional_client.disable_import_findings_for_product(
