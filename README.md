@@ -25,7 +25,7 @@ Stack set templates to deploy a partner integration in AWS Security Hub across a
 
 ## Updating regions and AWS Organization Units
 
-You can add and remove regions and AWS Organization Unit IDs by updating `parameter.json` and re-deploying changes. You can also update directly these values from the AWS Cloudformation console stack named `securityhub-integration-<PARTNER-NAME>`. 
+You can add and remove regions and AWS Organization Unit IDs by updating `parameter.json` and re-deploying changes. You can also update directly these values from the AWS Cloudformation console stack named `securityhub-integration-<PARTNER-NAME>`. To enable new integrations, create a new `parameter.json` file version for the new partner and deploy a new stack using the deployment script.
 
 ## Disabling integration
 
