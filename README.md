@@ -9,7 +9,7 @@ Stack set templates to deploy a partner integration in AWS Security Hub across a
 
 ## Prerequisites
 
-1. AWS Security Hub enabled across AWS Organization.
+1. AWS Security Hub enabled across AWS Organization in the regions where partner integration will be deployed.
 2. Trusted access with AWS Organization is enabled. This enables you to deploy Cloudformation Stack sets across an AWS Organization. You can find how to enable here. 
 3. Permissions to deploy CloudFormation Stack sets in an StackSet delegated administrator account.
 4. AWS Command Line Interface (AWS CLI) installed.
