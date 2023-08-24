@@ -11,13 +11,12 @@ Parameters:
     AllowedPattern: ^[a-zA-Z0-9-]+$
   ProductArn:
     Type: String
-    Description: 'Product Arn (arn:aws:securityhub:<REGION>:Product). Use <REGION> to specify all regions'
+    Description: 'Product Arn (arn:aws:securityhub:<REGION>:Product)'
   DeploymentTargets:
     Type: CommaDelimitedList
     Description: List of OUs for deploying
   DeploymentRegions:
     Type: CommaDelimitedList
-    Default: "1"
     Description: 'Comma separated list of region names (eu-west-1, eu-central-1)'
 
 Resources:
@@ -53,11 +52,10 @@ Resources:
         Parameters:
           ProductArn:
             Type: String
-            Description: 'Product Arn (arn:aws:securityhub:<REGION>:Product). Use <REGION> to specify all regions'
+            Description: 'Product Arn (arn:aws:securityhub:<REGION>:Product)'
           DeploymentRegions:
             Type: CommaDelimitedList
             Description: 'Deployment regions names'
-            Default: 1
 
         Resources:
           EnableIntegrationLambda:
